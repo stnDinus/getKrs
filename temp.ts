@@ -1,13 +1,18 @@
-function getArr(div: Element, offset = 22) {
+/**
+ * Glossary:
+ * Mk = Mata Kuliah
+ */
+
+function getPageMks(page: Element, offset = 22) {
   return Array
-    .from(div.querySelectorAll(`span`))
+    .from(page.querySelectorAll(`span`))
     .filter(span => (span as HTMLSpanElement).innerText !== " ")
     .map(span => (span as HTMLSpanElement).innerText)
     .splice(offset);
 }
 
-function getMks(
-  arr: string[],
+function parsePageMks(
+  pageMks: string[],
   keys = [
     "no",
     "kode",
@@ -24,10 +29,10 @@ function getMks(
 ) {
   const json: Object[] = [];
 
-  for (let i = 0; i < arr.length;) {
+  for (let i = 0; i < pageMks.length;) {
     const el = {};
     for (let j = 0; j < keys.length; j++) {
-      Object.assign(el, { [keys[j]]: arr[i++] })
+      el[keys[j]] = pageMks[i++]
     }
     json.push(el)
   }
@@ -37,3 +42,37 @@ function getMks(
     idx <= limit && parseInt(obj["no"]) > 0
   );
 }
+
+async function getAllMks(viewer: HTMLElement, delay = 2000): Promise<any[]> {
+  const allMks = []
+
+  const pages = viewer.getElementsByClassName("page")
+
+  for (const page of pages) {
+    page.scrollIntoView()
+    await new Promise(r => setTimeout(r, delay));
+    allMks.push(parsePageMks(getPageMks(page)))
+  }
+
+  return allMks.flat()
+}
+
+async function getKrs(delay?: number): Promise<Object[]> {
+  const viewer = document.getElementById("viewer")
+  if (viewer === null) throw Error("Element with id `viewer` not found")
+
+  return await getAllMks(viewer, delay)
+}
+
+let krs: Object[];
+let delay = 2000;
+async function loadKrs() {
+  try {
+    krs = await getKrs(delay)
+  } catch (error) {
+    console.error(error);
+    return
+  }
+  console.log(krs);
+}
+loadKrs()

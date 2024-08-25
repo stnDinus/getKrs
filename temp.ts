@@ -3,6 +3,8 @@
  * Mk = Mata Kuliah
  */
 
+import { Kelas, KlsJSON, ParsedKlsJSON } from "./format";
+
 function getPageMks(page: Element, offset = 22) {
   return Array
     .from(page.querySelectorAll(`span`))
@@ -27,14 +29,14 @@ function parsePageMks(
   ],
   limit = 45
 ) {
-  const json: Object[] = [];
+  const json: KlsJSON[] = [];
 
   for (let i = 0; i < pageMks.length;) {
     const el = {};
     for (let j = 0; j < keys.length; j++) {
       el[keys[j]] = pageMks[i++]
     }
-    json.push(el)
+    json.push(el as KlsJSON)
   }
 
   // returns up to limit
@@ -43,7 +45,7 @@ function parsePageMks(
   );
 }
 
-async function getAllMks(viewer: HTMLElement, delay = 2000): Promise<any[]> {
+async function getAllMks(viewer: HTMLElement, delay = 2000): Promise<(KlsJSON | ParsedKlsJSON)[]> {
   const allMks = []
 
   const pages = viewer.getElementsByClassName("page")
@@ -51,7 +53,12 @@ async function getAllMks(viewer: HTMLElement, delay = 2000): Promise<any[]> {
   for (const page of pages) {
     page.scrollIntoView()
     await new Promise(r => setTimeout(r, delay));
-    allMks.push(parsePageMks(getPageMks(page)))
+    allMks.push(parsePageMks(getPageMks(page)).map(mk => {
+      //@ts-expect-error
+      if (!PARSE_JSON) return mk
+      const kls = new Kelas(mk)
+      return kls.format()
+    }))
   }
 
   return allMks.flat()

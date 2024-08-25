@@ -4,6 +4,7 @@
  */
 
 import { Kelas, KlsJSON, ParsedKlsJSON } from "./format";
+import { stringify } from "./node_modules/csv-stringify/dist/esm/sync";
 
 function getPageMks(page: Element, offset = 22) {
   return Array
@@ -54,7 +55,7 @@ async function getAllMks(viewer: HTMLElement, delay = 2000): Promise<(KlsJSON | 
     page.scrollIntoView()
     await new Promise(r => setTimeout(r, delay));
     allMks.push(parsePageMks(getPageMks(page)).map(mk => {
-      //@ts-expect-error
+      // @ts-expect-error
       if (!PARSE_JSON) return mk
       const kls = new Kelas(mk)
       return kls.format()
@@ -71,15 +72,28 @@ async function getKrs(delay?: number): Promise<Object[]> {
   return await getAllMks(viewer, delay)
 }
 
-let krs: Object[];
+let out: string;
 let delay = 2000;
 async function loadKrs() {
   try {
-    krs = await getKrs(delay)
+    // @ts-expect-error
+    switch (OUTPUT_FILE_FORMAT) {
+      case "csv":
+        const data = await getKrs(delay)
+        const input = [Object.keys(data[0])]
+        for (let i = 1; i < data.length; i++) input.push(Object.values(data[i]))
+        out = stringify(input)
+        break;
+      case "json":
+        out = JSON.stringify(await getKrs(delay))
+        break;
+      default:
+        throw new Error("Unspecified/invalid output file format (should be `json` or `csv`)")
+    }
   } catch (error) {
     console.error(error);
     return
   }
-  console.log(krs);
+  console.log(out);
 }
 loadKrs()

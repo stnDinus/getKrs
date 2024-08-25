@@ -7,7 +7,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       OUTPUT_FILE_FORMAT: `"${process.env.OUTPUT_FILE_FORMAT || "csv"}"`,
-      PARSE_JSON: JSON.stringify(process.env.PARSE_JSON !== undefined)
+      PARSE_JSON: process.env.OUTPUT_FORMAT !== "raw"
     })
   ],
   module: {

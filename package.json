@@ -1,5 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
+  "scripts": {
+    "dev": "webpack --mode=development",
+    "compile": "webpack --mode=production"
+  },
   "devDependencies": {
     "ts-loader": "^9.5.1",
     "webpack": "^5.93.0",

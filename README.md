@@ -12,7 +12,7 @@ npm i
 ## Usage
 1. Compile to `temp.js`:
 ```bash
-npx webpack
+npm run compile
 ```
 2. Copy contents of temp.js
 3. Open `krs_tawar_***.****.*****.pdf` in browser

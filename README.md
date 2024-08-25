@@ -1,12 +1,18 @@
 # getKrs
 ## Dependencies
-- `typescript`
+- `npm`
 - `jq` (optional, for csv conversion)
 
-## Usage
-1. Compile typescript:
+## Pre-setup
+Install required dependencies:
 ```bash
-tsc
+npm i
+```
+
+## Usage
+1. Compile to `temp.js`:
+```bash
+npx webpack
 ```
 2. Copy contents of temp.js
 3. Open `krs_tawar_***.****.*****.pdf` in browser

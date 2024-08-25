@@ -72,6 +72,20 @@ async function getKrs(delay?: number): Promise<Object[]> {
   return await getAllMks(viewer, delay)
 }
 
+function saveFile(out: string) {
+  const mimeMap = {
+    "csv": "text/csv",
+    "json": "application/json"
+  };
+
+  // @ts-expect-error
+  const fileName = `tawaran_krs_${new Date(Date.now()).toISOString()}.${OUTPUT_FILE_FORMAT}`
+  // @ts-expect-error
+  const options = { type: mimeMap[OUTPUT_FILE_FORMAT] }
+
+  window.location.assign(window.URL.createObjectURL(new File([out], fileName, options)))
+}
+
 let out: string;
 let delay = 2000;
 async function loadKrs() {
@@ -94,6 +108,6 @@ async function loadKrs() {
     console.error(error);
     return
   }
-  console.log(out);
+  saveFile(out)
 }
 loadKrs()

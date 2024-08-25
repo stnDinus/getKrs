@@ -15,5 +15,5 @@ tsc
 6. Paste and save in a file (e.g. `krs.json`)
 7. (Optional) Convert to CSV:
 ```bash
-jq ".[] | [.no, .kode, .nama, .sks, .tp, .kelp, .jadwal1, .jadwal2, .jadwal3, .jam] | @csv" krs.json > krs.csv
+jq -r ".[] | [.no, .kode, .nama, .sks, .tp, .kelp, .jadwal1, .jadwal2, .jadwal3, .jam] | @csv" krs.json > krs.csv
 ```

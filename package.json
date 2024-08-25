@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "devDependencies": {
     "ts-loader": "^9.5.1",
     "webpack": "^5.93.0",

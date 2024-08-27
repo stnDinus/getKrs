@@ -4,7 +4,7 @@
  */
 
 import { Kelas, KlsJSON, ParsedKlsJSON } from "./format";
-import { stringify } from "./node_modules/csv-stringify/dist/esm/sync";
+import { stringify } from "csv-stringify/browser/esm/sync";
 
 function getPageMks(page: Element, offset = 22) {
   return Array

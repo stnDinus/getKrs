@@ -1,4 +1,6 @@
 # getKrs
+KRS PDF to CSV/JSON formatter
+
 ## Dependencies
 - `npm`
 
